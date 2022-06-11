@@ -1,6 +1,6 @@
 import prismaClient from '../../prisma'
 
-import { Bcryptjs } from '../../shared/EncryptPassword/implementations/Bcryptjs'
+import { PasswordProvider } from './shared/PasswordProvider'
 
 
 interface IRequest {
@@ -22,9 +22,9 @@ class CreateUserService {
 
     if (emailAlreadyExists) throw new Error('Email already exists!')
 
-    const bcryptjs = new Bcryptjs()
+    const passwordProvider = new PasswordProvider()
 
-    const passwordHash = await bcryptjs.encryptPassword(password)
+    const passwordHash = await passwordProvider.encryptPassword(password)
 
     /* register user */
     const user = await prismaClient.user.create({
