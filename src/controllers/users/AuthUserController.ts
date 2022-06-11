@@ -12,12 +12,12 @@ class AuthUserController {
 
     const authUserService = new AuthUserService()
 
-    const auth = await authUserService.execute({
+    const token = await authUserService.execute({
       email,
       password
     })
 
-    return response.status(201).json(auth)
+    return response.status(201).json(token)
   }
 
 }

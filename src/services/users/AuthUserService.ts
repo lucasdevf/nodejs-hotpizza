@@ -1,4 +1,4 @@
-import prismaClient from "../../prisma";
+import { sign } from 'jsonwebtoken'
 
 import { PasswordProvider } from "./shared/PasswordProvider";
 
@@ -9,9 +9,17 @@ interface IRequest {
   password: string
 }
 
+interface IResponse {
+  user: {
+    name: string
+    email: string
+  },
+  token: string
+}
+
 class AuthUserService {
 
-  async execute({ email, password }: IRequest) {
+  async execute({ email, password }: IRequest): Promise<IResponse> {
 
     /* validates if user exists */
     const listUserByEmailService = new ListUserByEmailService()
@@ -23,7 +31,28 @@ class AuthUserService {
     /* validates if password hash match with password */
     const passwordProvider = new PasswordProvider()
     const passwordMatch = await passwordProvider.compareHashWithPassword(password, userExists.password)
-    if (!passwordMatch) throw new Error('User or pass invalid!')
+    if (!passwordMatch) throw new Error('User or pass invalid')
+
+    /* generate auth token */
+    const token = sign(
+      {
+        name: userExists.name,
+        email: userExists.email
+      },
+      process.env.JWT_SECRET_KEY,
+      {
+        subject: userExists.id,
+        expiresIn: '30d'
+      }
+    )
+
+    return {
+      user: {
+        name: userExists.name,
+        email: userExists.email
+      },
+      token
+    }
   }
 
 }
