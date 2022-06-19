@@ -1,6 +1,6 @@
 import { sign } from 'jsonwebtoken'
 
-import { PasswordProvider } from "./shared/PasswordProvider";
+import { PasswordProvider } from "../../providers/PasswordProvider";
 
 import { ListUserByEmailService } from './ListUserByEmailService'
 
@@ -31,7 +31,7 @@ class AuthUserService {
     /* validates if password hash match with password */
     const passwordProvider = new PasswordProvider()
     const passwordMatch = await passwordProvider.compareHashWithPassword(password, userExists.password)
-    if (!passwordMatch) throw new Error('User or pass invalid')
+    if (!passwordMatch) throw new Error('User or pass invalid!')
 
     /* generate auth token */
     const token = sign(

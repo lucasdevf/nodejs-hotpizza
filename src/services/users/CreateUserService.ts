@@ -1,6 +1,6 @@
 import prismaClient from '../../prisma'
 
-import { PasswordProvider } from './shared/PasswordProvider'
+import { PasswordProvider } from '../../providers/PasswordProvider'
 
 
 interface IRequest {
